@@ -1,10 +1,10 @@
-2571
+2572
 126C:\Users\foste\Documents\forkify\node_modules\ordered-binary\.nyc_output\processinfo\5b6bd808-0399-4ee6-9395-344688761dfa.json134072081087498326 0
 73C:\Users\foste\Documents\forkify\node_modules\@parcel\events\package.json134072081133273601 0
 52C:\Users\foste\Documents\forkify\node_modules\braces134072081089217265 1
 76C:\Users\foste\Documents\forkify\node_modules\@parcel\utils\src\sourcemap.js134072081159497458 0
 36C:\Users\foste\Documents\forkify\src134051468279363230 1
-37C:\Users\foste\Documents\forkify\dist134079139980854925 1
+37C:\Users\foste\Documents\forkify\dist134079208705148013 1
 54C:\Users\foste\Documents\forkify\node_modules\chokidar134072086283671864 1
 77C:\Users\foste\Documents\forkify\node_modules\source-map-js\lib\base64-vlq.js134072086277985367 0
 43C:\Users\foste\Documents\forkify\index.html134077352811773868 0
@@ -53,7 +53,7 @@
 105C:\Users\foste\Documents\forkify\node_modules\lmdb\dependencies\lmdb-data-v1\libraries\liblmdb\mdb_copy.c134072081152351850 0
 57C:\Users\foste\Documents\forkify\node_modules\fraction.js134077548583134878 1
 72C:\Users\foste\Documents\forkify\node_modules\node-addon-api\except.gypi134072081077291129 0
-57C:\Users\foste\Documents\forkify\dist\forkify.4a59a05f.js134079139980675047 0
+57C:\Users\foste\Documents\forkify\dist\forkify.4a59a05f.js134079208705011390 0
 52C:\Users\foste\Documents\forkify\node_modules\@lezer134072081057543599 1
 68C:\Users\foste\Documents\forkify\node_modules\semver\functions\lt.js134072081131134948 0
 64C:\Users\foste\Documents\forkify\node_modules\utility-types\dist134072081122017073 1
@@ -83,8 +83,8 @@
 60C:\Users\foste\Documents\forkify\src\js\views\ResultsView.js134079139978877714 0
 64C:\Users\foste\Documents\forkify\node_modules\@swc\core\index.js134072081094244174 0
 58C:\Users\foste\Documents\forkify\src\sass\_components.scss134051468546101674 0
-65C:\Users\foste\Documents\forkify\node_modules\lmdb\src\writer.cpp134072081176027275 0
 73C:\Users\foste\Documents\forkify\node_modules\@parcel\package-manager\src134072081144146913 1
+65C:\Users\foste\Documents\forkify\node_modules\lmdb\src\writer.cpp134072081176027275 0
 66C:\Users\foste\Documents\forkify\node_modules\picocolors\README.md134072081074402895 0
 54C:\Users\foste\Documents\forkify\src\sass\_header.scss134051468546491454 0
 66C:\Users\foste\Documents\forkify\node_modules\msgpackr\SECURITY.md134072081149613536 0
@@ -94,6 +94,10 @@
 77C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\regions\NZ.js134072081232042810 0
 70C:\Users\foste\Documents\forkify\node_modules\baseline-browser-mapping134072081094224186 1
 80C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\features\spdy.js134072081236460073 0
+84C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\features\css-sel2.js134072081204419789 0
+81C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\dist\unpacker\index.js134072081225007108 0
+101C:\Users\foste\Documents\forkify\node_modules\lmdb\dependencies\lmdb-data-v1\libraries\liblmdb\midl.h134072081181164109 0
+63C:\Users\foste\Documents\forkify\src\js\views\paginationView.js134079178957479759 0
 56C:\Users\foste\Documents\forkify\node_modules\semver\bin134072081144776520 1
 77C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\regions\BD.js134072081156539284 0
 54C:\Users\foste\Documents\forkify\src\sass\_recipe.scss134051468547131029 0
@@ -110,9 +114,9 @@
 77C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\regions\WF.js134072081241556926 0
 68C:\Users\foste\Documents\forkify\node_modules\to-regex-range\LICENSE134072081073893293 0
 54C:\Users\foste\Documents\forkify\src\sass\_upload.scss134051468547720674 0
-49C:\Users\foste\Documents\forkify\src\js\config.js134078874509046185 0
+49C:\Users\foste\Documents\forkify\src\js\config.js134079152844204309 0
 89C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\features\web-animation.js134072081240807399 0
-53C:\Users\foste\Documents\forkify\src\js\controller.js134079127649696147 0
+53C:\Users\foste\Documents\forkify\src\js\controller.js134079208695521746 0
 84C:\Users\foste\Documents\forkify\node_modules\node-releases\data\processed\envs.json134072081073743299 0
 83C:\Users\foste\Documents\forkify\node_modules\.lightningcss-win32-x64-msvc-bQIfWFin134072086288440195 1
 85C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\features\dom-range.js134072081214513565 0
@@ -124,9 +128,9 @@
 73C:\Users\foste\Documents\forkify\node_modules\semver\ranges\intersects.js134072081127447185 0
 77C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\regions\AO.js134072081137141230 0
 63C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\dist134072081236699913 1
-48C:\Users\foste\Documents\forkify\src\js\model.js134079078189904911 0
+48C:\Users\foste\Documents\forkify\src\js\model.js134079169175754182 0
 94C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\features\insertadjacenthtml.js134072081226815993 0
-45C:\Users\foste\Documents\forkify\src\js\views134079119729415728 1
+45C:\Users\foste\Documents\forkify\src\js\views134079178315406933 1
 84C:\Users\foste\Documents\forkify\node_modules\@parcel\core\lib\public\BundleGraph.js134072081150393064 0
 71C:\Users\foste\Documents\forkify\node_modules\@parcel\feature-flags\src134072081124130023 1
 59C:\Users\foste\Documents\forkify\src\js\views\searchView.js134079127690176963 0
@@ -580,7 +584,7 @@
 75C:\Users\foste\Documents\forkify\node_modules\@parcel\profiler\src\Trace.js134072081106836417 0
 72C:\Users\foste\Documents\forkify\node_modules\@parcel\core\lib\Parcel.js134072081172489454 0
 76C:\Users\foste\Documents\forkify\node_modules\@parcel\watcher\src\Watcher.cc134072081125068656 0
-48C:\Users\foste\Documents\forkify\dist\index.html134079139945345378 0
+48C:\Users\foste\Documents\forkify\dist\index.html134079169185581380 0
 96C:\Users\foste\Documents\forkify\node_modules\@parcel\diagnostic\test\JSONCodeHighlights.test.js134072081121557353 0
 69C:\Users\foste\Documents\forkify\node_modules\semver\functions\lte.js134072081132064348 0
 115C:\Users\foste\Documents\forkify\node_modules\msgpackr-extract\node_modules\node-gyp-build-optional-packages\bin.js134072081116360557 0
@@ -600,7 +604,7 @@
 71C:\Users\foste\Documents\forkify\node_modules\semver\functions\patch.js134072081139809574 0
 73C:\Users\foste\Documents\forkify\node_modules\@parcel\graph\lib\BitSet.js134072081119888374 0
 68C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\README.md134072081242106589 0
-55C:\Users\foste\Documents\forkify\dist\logo.726d37a8.png134079139945831304 0
+55C:\Users\foste\Documents\forkify\dist\logo.726d37a8.png134079169184316710 0
 76C:\Users\foste\Documents\forkify\node_modules\semver\functions\prerelease.js134072081140818959 0
 74C:\Users\foste\Documents\forkify\node_modules\@parcel\workers\lib\index.js134072081137451043 0
 96C:\Users\foste\Documents\forkify\node_modules\@parcel\source-map\parcel_sourcemap_node\artifacts134072081162145830 1
@@ -1098,9 +1102,6 @@
 105C:\Users\foste\Documents\forkify\node_modules\lmdb\dependencies\lmdb-data-v1\libraries\liblmdb\mdb_stat.1134072081145715945 0
 80C:\Users\foste\Documents\forkify\node_modules\@parcel\events\src\ValueEmitter.js134072081132254247 0
 105C:\Users\foste\Documents\forkify\node_modules\lmdb\dependencies\lmdb-data-v1\libraries\liblmdb\mdb_stat.c134072081156649212 0
-84C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\features\css-sel2.js134072081204419789 0
-81C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\dist\unpacker\index.js134072081225007108 0
-101C:\Users\foste\Documents\forkify\node_modules\lmdb\dependencies\lmdb-data-v1\libraries\liblmdb\midl.h134072081181164109 0
 77C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\regions\IM.js134072081224527403 0
 102C:\Users\foste\Documents\forkify\node_modules\lmdb\dependencies\lmdb-data-v1\libraries\liblmdb\mtest.c134072081167332642 0
 77C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\regions\AR.js134072081139189967 0
@@ -1879,7 +1880,7 @@
 88C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\features\input-search.js134072081226606131 0
 91C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\features\input-selection.js134072081226656098 0
 99C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\features\intersectionobserver-v2.js134072081226945922 0
-62C:\Users\foste\Documents\forkify\dist\forkify.f7626f62.css.map134079139946363298 0
+62C:\Users\foste\Documents\forkify\dist\forkify.f7626f62.css.map134079169186320937 0
 96C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\features\intersectionobserver.js134072081227005881 0
 92C:\Users\foste\Documents\forkify\node_modules\caniuse-lite\data\features\intl-pluralrules.js134072081227085828 0
 75C:\Users\foste\Documents\forkify\node_modules\@parcel\profiler\package.json134072081124409846 0
@@ -2564,9 +2565,9 @@
 55C:\Users\foste\Documents\forkify\node_modules\.bin\sass134072086287310901 0
 59C:\Users\foste\Documents\forkify\node_modules\.bin\sass.ps1134072086287320896 0
 77C:\Users\foste\Documents\forkify\node_modules\.bin\update-browserslist-db.ps1134072081243135944 0
-58C:\Users\foste\Documents\forkify\dist\favicon.8b2f57bf.png134079139945723812 0
+58C:\Users\foste\Documents\forkify\dist\favicon.8b2f57bf.png134079169184105128 0
 57C:\Users\foste\Documents\forkify\dist\forkify.3464ddca.js134072158472311785 0
-61C:\Users\foste\Documents\forkify\dist\forkify.4a59a05f.js.map134079139980784983 0
-58C:\Users\foste\Documents\forkify\dist\forkify.f7626f62.css134079139945723812 0
-56C:\Users\foste\Documents\forkify\dist\icons.21bad73c.svg134079139945713292 0
-56C:\Users\foste\Documents\forkify\dist\icons.7bd9dd61.svg134079139945723812 0
+61C:\Users\foste\Documents\forkify\dist\forkify.4a59a05f.js.map134079208705128043 0
+58C:\Users\foste\Documents\forkify\dist\forkify.f7626f62.css134079169186211008 0
+56C:\Users\foste\Documents\forkify\dist\icons.21bad73c.svg134079169186370903 0
+56C:\Users\foste\Documents\forkify\dist\icons.7bd9dd61.svg134079169186370903 0

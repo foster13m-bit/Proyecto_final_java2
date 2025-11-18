@@ -1,5 +1,5 @@
 import { getJSON } from '../js/helpers.js'; // Importa getJSON
-import { API_URL } from './config.js'; // Importa la constante desde config.js
+import { API_URL, RES_PER_PAGE } from './config.js'; // Importa la constante desde config.js
 // Estado global de la aplicación
 // Aquí se almacenan los datos que se comparten entre módulos (receta actual, búsqueda, marcadores)
 export const state = {
@@ -7,6 +7,10 @@ export const state = {
     search: {
         query: '',   // 2.a.i: Almacena la consulta de búsqueda
         results: [], // 2.a.ii: Almacena los resultados de la búsqueda (matriz vacía)
+        // 1.b.ii.1: page con valor 1 por defecto
+        page: 1, 
+        // 1.b.ii.2: resultsPerPage asignado a RES_PER_PAGE
+        resultsPerPage: RES_PER_PAGE, 
     }, // Resultados de búsqueda (se implementará más adelante)
     bookmarks: [], // Recetas guardadas por el usuario (se implementará más adelante)
 };
@@ -52,7 +56,12 @@ export async function loadRecipe(id) {
             cookTime: recipe.cooking_time,
             ingredients: recipe.ingredients,
         };
-        
+        // Opcional: Para cargar el marcador de una receta si ya está marcada
+        if (state.bookmarks.some(bookmark => bookmark.id === id))
+            state.recipe.bookmarked = true;
+        else
+            state.recipe.bookmarked = false;
+
         // l.Imprime en la consola el contenido (Paso 15.l)
         console.log('Objeto recipe reformateado:', state.recipe);
 
@@ -74,7 +83,7 @@ export async function loadRecipe(id) {
         // Esto permite que controlRecipes lo capture,avance 3
         throw error;
     }
-}
+};
 
 ///////////////////////////avance 3 //////////////////////////
 // 1.a: Declara y exporta una función asíncrona llamada loadSearchResults
@@ -98,7 +107,8 @@ export async function loadSearchResults(query) {
                 image: rec.image_url,
             };
         });
-
+        // Reiniciar la página a 1 cada vez que se realiza una nueva búsqueda
+        state.search.page = 1; 
         // 2.b.iii: Envía a la consola los resultados
         //console.log('Resultados de búsqueda (state.search.results):', state.search.results);
 
@@ -111,4 +121,17 @@ export async function loadSearchResults(query) {
         // 1.f: Lanza el error nuevamente para que pueda ser utilizado por el controlador
         throw error;
     }
-}
+};
+
+// 1.b.iii: Crea y exporta la función getSearchResultsPage
+export const getSearchResultsPage = function (page = state.search.page) { // 1.b.iii.2
+    // 1.b.iii.4.a: Asigna el valor de page al estado
+    state.search.page = page; 
+
+    // 1.b.iii.4.b: Cálculo de start y end para el método slice
+    const start = (page - 1) * state.search.resultsPerPage; // 1.b.iii.4.b.i
+    const end = page * state.search.resultsPerPage; // 1.b.iii.4.b.ii
+
+    // 1.b.iii.4.c: Retorna el slice del arreglo de resultados
+    return state.search.results.slice(start, end);
+};

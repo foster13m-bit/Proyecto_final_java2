@@ -728,6 +728,8 @@ var _searchViewJsDefault = parcelHelpers.interopDefault(_searchViewJs);
 // 5.g.i: Importa la clase ResultsView
 var _resultsViewJs = require("../js/views/ResultsView.js");
 var _resultsViewJsDefault = parcelHelpers.interopDefault(_resultsViewJs);
+var _paginationViewJs = require("../js/views/paginationView.js");
+var _paginationViewJsDefault = parcelHelpers.interopDefault(_paginationViewJs);
 const recipeContainer = document.querySelector('.recipe');
 const timeout = function(s) {
     return new Promise(function(_, reject) {
@@ -760,7 +762,7 @@ const controlRecipes = async function() {
     // LLAMADA DEL SPINNER:
     (0, _recipeViewJsDefault.default).renderSpinner(); // Se llama justo antes de la operación asíncrona
     // Simular carga lenta (2 segundos)
-    await new Promise((resolve)=>setTimeout(resolve, 2000));
+    //await new Promise(resolve => setTimeout(resolve, 2000));
     try {
         // const urlValida = `https://forkify-api.herokuapp.com/api/v2/recipes/${id}`;
         // // const urlInvalida = 'https://forkify-api.herokuapp.com/api/v2/recipes/5ed6604591c37cdc054bc886zzz'; // Para la prueba H https://forkify-api.herokuapp.com/api/v2/recipes/5ed6604591c37cdc054bc886
@@ -905,7 +907,11 @@ const controlSearchResults = async function() {
         // 3.a.i.1: Invoca a la función model.loadSearchResults con el parámetro query
         await _modelJs.loadSearchResults(query);
         // 5.h.v: Invoca el método resultView.render con los resultados
-        (0, _resultsViewJsDefault.default).render(_modelJs.state.search.results);
+        //resultsView.render(model.state.search.results);
+        // 1.c: Modifica la forma de renderizar para usar la función getSearchResultsPage
+        // 2. Renderizar SOLO la página de resultados actual (página 1 por defecto)
+        (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultsPage());
+        (0, _paginationViewJsDefault.default).render(_modelJs.state.search);
     // 3.a.i.2: Imprime en la consola el resultado
     //console.log('Resultados desde el controlador:', model.state.search.results);
     } catch (error) {
@@ -916,6 +922,15 @@ const controlSearchResults = async function() {
     }
 };
 //////////////////////////////////////////////////////////
+const controlPagination = function(goToPage) {
+    // 1. Llamar al modelo para obtener la nueva página de resultados (actualiza model.state.search.page)
+    const newPageResults = _modelJs.getSearchResultsPage(goToPage);
+    // 2. Renderizar la lista de resultados con los nuevos datos
+    (0, _resultsViewJsDefault.default).render(newPageResults);
+    // 3. Renderizar los botones de paginación actualizados (para que muestre el botón siguiente/anterior correcto)
+    (0, _paginationViewJsDefault.default).render(_modelJs.state.search);
+};
+//////////////////////////////////////////////////////////////
 // e. Invocar a la función showRecipe
 //controlRecipes(); //El listener de load ya maneja la carga inicial de la página. El llamado directo a controlRecipes() es innecesario.
 //['hashchange','load'].forEach(ev => window.addEventListener(ev, controlRecipes)); avance 3 paso 1.a cortar y pegar en RecipeReview
@@ -927,12 +942,13 @@ const init = function() {
     //controlSearchResults();
     // 4.d.iii: Agrega el método searchView.addHandlerSearch con el parámetro controlSearchResults
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchResults);
+    (0, _paginationViewJsDefault.default).addHandlerClick(controlPagination);
 };
 // 1.d.ii: Invoca a la función init
 init(); // https://forkify-api.herokuapp.com/v2
  ///////////////////////////////////////
 
-},{"./model.js":"3QBkH","../js/views/RecipeView.js":"dfIpa","@parcel/transformer-js/src/esmodule-helpers.js":"idvtB","../js/views/searchView.js":"kbE4Z","../js/views/ResultsView.js":"CYzq3"}],"3QBkH":[function(require,module,exports,__globalThis) {
+},{"./model.js":"3QBkH","../js/views/RecipeView.js":"dfIpa","@parcel/transformer-js/src/esmodule-helpers.js":"idvtB","../js/views/searchView.js":"kbE4Z","../js/views/ResultsView.js":"CYzq3","../js/views/paginationView.js":"7NIiB"}],"3QBkH":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state);
@@ -940,13 +956,18 @@ parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
 ///////////////////////////avance 3 //////////////////////////
 // 1.a: Declara y exporta una función asíncrona llamada loadSearchResults
 parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults);
+parcelHelpers.export(exports, "getSearchResultsPage", ()=>getSearchResultsPage);
 var _helpersJs = require("../js/helpers.js"); // Importa getJSON
 var _configJs = require("./config.js"); // Importa la constante desde config.js
 const state = {
     recipe: {},
     search: {
         query: '',
-        results: []
+        results: [],
+        // 1.b.ii.1: page con valor 1 por defecto
+        page: 1,
+        // 1.b.ii.2: resultsPerPage asignado a RES_PER_PAGE
+        resultsPerPage: (0, _configJs.RES_PER_PAGE)
     },
     bookmarks: []
 };
@@ -986,6 +1007,9 @@ async function loadRecipe(id) {
             cookTime: recipe.cooking_time,
             ingredients: recipe.ingredients
         };
+        // Opcional: Para cargar el marcador de una receta si ya está marcada
+        if (state.bookmarks.some((bookmark)=>bookmark.id === id)) state.recipe.bookmarked = true;
+        else state.recipe.bookmarked = false;
         // l.Imprime en la consola el contenido (Paso 15.l)
         console.log('Objeto recipe reformateado:', state.recipe);
     } catch (error) {
@@ -1022,6 +1046,8 @@ async function loadSearchResults(query) {
                 image: rec.image_url
             };
         });
+        // Reiniciar la página a 1 cada vez que se realiza una nueva búsqueda
+        state.search.page = 1;
     // 2.b.iii: Envía a la consola los resultados
     //console.log('Resultados de búsqueda (state.search.results):', state.search.results);
     // 1.g: Prueba (eliminar después)
@@ -1033,6 +1059,15 @@ async function loadSearchResults(query) {
         throw error;
     }
 }
+const getSearchResultsPage = function(page = state.search.page) {
+    // 1.b.iii.4.a: Asigna el valor de page al estado
+    state.search.page = page;
+    // 1.b.iii.4.b: Cálculo de start y end para el método slice
+    const start = (page - 1) * state.search.resultsPerPage; // 1.b.iii.4.b.i
+    const end = page * state.search.resultsPerPage; // 1.b.iii.4.b.ii
+    // 1.b.iii.4.c: Retorna el slice del arreglo de resultados
+    return state.search.results.slice(start, end);
+};
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"idvtB","./config.js":"2hPh4","../js/helpers.js":"7nL9P"}],"idvtB":[function(require,module,exports,__globalThis) {
 exports.interopDefault = function(a) {
@@ -1073,8 +1108,10 @@ exports.export = function(dest, destName, get) {
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "API_URL", ()=>API_URL);
 parcelHelpers.export(exports, "TIMEOUT_SEC", ()=>TIMEOUT_SEC);
+parcelHelpers.export(exports, "RES_PER_PAGE", ()=>RES_PER_PAGE);
 const API_URL = 'https://forkify-api.herokuapp.com/api/v2/recipes/';
-const TIMEOUT_SEC = 5;
+const TIMEOUT_SEC = 10;
+const RES_PER_PAGE = 10;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"idvtB"}],"7nL9P":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -1816,6 +1853,72 @@ class ResultsView extends (0, _viewJsDefault.default) {
 }
 exports.default = new ResultsView(); // 5.f.iv: Exporta la instancia
 
-},{"./View.js":"jSw21","@parcel/transformer-js/src/esmodule-helpers.js":"idvtB","b799160e8a92a7be":"9OuHA"}]},["2rtMv","7dWZ8"], "7dWZ8", "parcelRequire3a11", {}, "./", "/")
+},{"./View.js":"jSw21","@parcel/transformer-js/src/esmodule-helpers.js":"idvtB","b799160e8a92a7be":"9OuHA"}],"7NIiB":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _viewJs = require("./View.js");
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+// Importa los iconos aquí para que estén en el alcance de _generateMarkup
+const icons = new URL(require("d937d4480f9ab689")).href;
+// 2.a.iii: Crea la clase PaginationView como hija de View
+class PaginationView extends (0, _viewJsDefault.default) {
+    // 2.a.iii.1: Elemento padre con clase .pagination
+    _parentElement = document.querySelector('.pagination');
+    // 2.a.iii.4: Crea el método addHandlerClick
+    addHandlerClick(handler) {
+        // 2.a.iii.4.a: Escucha el evento 'click' en el elemento padre
+        this._parentElement.addEventListener('click', function(e) {
+            // 2.a.iii.4.a.ii: Delegación de eventos. Busca el botón más cercano.
+            const btn = e.target.closest('.btn--inline');
+            // Si el clic no fue en un botón, sal inmediatamente.
+            if (!btn) return;
+            // 2.a.iii.4.a.iii: Obtiene el número de página del atributo data-goto
+            const goToPage = +btn.dataset.goto; // El '+' convierte la cadena a número
+            // 2.a.iii.4.a.iv: Registra en la consola
+            // console.log(goToPage); 
+            // Llama al controlador (handler) con el número de página
+            handler(goToPage);
+        });
+    }
+    // 2.a.iii.3: Crea el método privado _generateMarkup
+    _generateMarkup() {
+        // 2.a.iii.3.2: Declara la constante para la página actual
+        const curPage = this._data.page;
+        // 2.a.iii.3.a: Valida cuántas páginas existen
+        const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
+        // Generación del Markup
+        // 2.a.iii.3.b.i: Escenario 1: Página 1 y existen más páginas
+        if (curPage === 1 && numPages > 1) return this._generateMarkupButton(curPage, 'next');
+        // 2.a.iii.3.b.ii: Escenario 2: Última página
+        if (curPage === numPages && numPages > 1) return this._generateMarkupButton(curPage, 'prev');
+        // 2.a.iii.3.b.iii: Escenario 3: Cualquier otra página (en medio)
+        if (curPage < numPages) return this._generateMarkupButton(curPage, 'prev') + this._generateMarkupButton(curPage, 'next');
+        // 2.a.iii.3.b.iv: Escenario 4: Página 1 y NO existen más páginas (solo 1 página)
+        return '';
+    }
+    // Helper para generar el botón (Para evitar repetición de código)
+    _generateMarkupButton(curPage, type) {
+        if (type === 'next') return `
+                <button data-goto="${curPage + 1}" class="btn--inline pagination__btn--next">
+                    <span>Page ${curPage + 1}</span>
+                    <svg class="search__icon">
+                        <use href="${icons}#icon-arrow-right"></use>
+                    </svg>
+                </button>
+            `;
+        if (type === 'prev') return `
+                <button data-goto="${curPage - 1}" class="btn--inline pagination__btn--prev">
+                    <svg class="search__icon">
+                        <use href="${icons}#icon-arrow-left"></use>
+                    </svg>
+                    <span>Page ${curPage - 1}</span>
+                </button>
+            `;
+    }
+}
+// 2.a.iii.4.v: Exporta por defecto un nuevo objeto de PaginationView
+exports.default = new PaginationView();
+
+},{"./View.js":"jSw21","d937d4480f9ab689":"9OuHA","@parcel/transformer-js/src/esmodule-helpers.js":"idvtB"}]},["2rtMv","7dWZ8"], "7dWZ8", "parcelRequire3a11", {}, "./", "/")
 
 //# sourceMappingURL=forkify.4a59a05f.js.map

@@ -8,6 +8,7 @@ import recipeView from '../js/views/RecipeView.js';
 import searchView from '../js/views/searchView.js';
 // 5.g.i: Importa la clase ResultsView
 import resultsView from '../js/views/ResultsView.js';
+import paginationView from '../js/views/paginationView.js';
 
 const recipeContainer = document.querySelector('.recipe');
 
@@ -44,7 +45,7 @@ const controlRecipes = async function () {
   // LLAMADA DEL SPINNER:
   recipeView.renderSpinner(); // Se llama justo antes de la operación asíncrona
   // Simular carga lenta (2 segundos)
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  //await new Promise(resolve => setTimeout(resolve, 2000));
   try {
     // const urlValida = `https://forkify-api.herokuapp.com/api/v2/recipes/${id}`;
     // // const urlInvalida = 'https://forkify-api.herokuapp.com/api/v2/recipes/5ed6604591c37cdc054bc886zzz'; // Para la prueba H https://forkify-api.herokuapp.com/api/v2/recipes/5ed6604591c37cdc054bc886
@@ -196,7 +197,11 @@ const controlSearchResults = async function () {
     // 3.a.i.1: Invoca a la función model.loadSearchResults con el parámetro query
     await model.loadSearchResults(query);
     // 5.h.v: Invoca el método resultView.render con los resultados
-    resultsView.render(model.state.search.results);
+    //resultsView.render(model.state.search.results);
+    // 1.c: Modifica la forma de renderizar para usar la función getSearchResultsPage
+    // 2. Renderizar SOLO la página de resultados actual (página 1 por defecto)
+    resultsView.render(model.getSearchResultsPage());
+    paginationView.render(model.state.search);
     // 3.a.i.2: Imprime en la consola el resultado
     //console.log('Resultados desde el controlador:', model.state.search.results);
 
@@ -208,6 +213,17 @@ const controlSearchResults = async function () {
   }
 };
 //////////////////////////////////////////////////////////
+const controlPagination = function (goToPage) {
+    // 1. Llamar al modelo para obtener la nueva página de resultados (actualiza model.state.search.page)
+    const newPageResults = model.getSearchResultsPage(goToPage);
+
+    // 2. Renderizar la lista de resultados con los nuevos datos
+    resultsView.render(newPageResults);
+    
+    // 3. Renderizar los botones de paginación actualizados (para que muestre el botón siguiente/anterior correcto)
+    paginationView.render(model.state.search);
+};
+//////////////////////////////////////////////////////////////
 // e. Invocar a la función showRecipe
 //controlRecipes(); //El listener de load ya maneja la carga inicial de la página. El llamado directo a controlRecipes() es innecesario.
 
@@ -221,6 +237,7 @@ const init = function () {
   //controlSearchResults();
   // 4.d.iii: Agrega el método searchView.addHandlerSearch con el parámetro controlSearchResults
   searchView.addHandlerSearch(controlSearchResults);
+  paginationView.addHandlerClick(controlPagination);
 };
 
 // 1.d.ii: Invoca a la función init
