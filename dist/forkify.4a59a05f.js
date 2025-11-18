@@ -720,8 +720,14 @@ var _modelJs = require("./model.js");
 //import * as recipeView from '../js/views/RecipeView.js';
 var _recipeViewJs = require("../js/views/RecipeView.js");
 var _recipeViewJsDefault = parcelHelpers.interopDefault(_recipeViewJs);
-console.log("valor recipe:", (0, _recipeViewJsDefault.default));
+//console.log("valor recipe:", recipeView);
 //const icons = new URL('../img/icons.svg', import.meta.url).href; // Parcel v2
+// 4.c.i: Importa la clase SearchView
+var _searchViewJs = require("../js/views/searchView.js");
+var _searchViewJsDefault = parcelHelpers.interopDefault(_searchViewJs);
+// 5.g.i: Importa la clase ResultsView
+var _resultsViewJs = require("../js/views/ResultsView.js");
+var _resultsViewJsDefault = parcelHelpers.interopDefault(_resultsViewJs);
 const recipeContainer = document.querySelector('.recipe');
 const timeout = function(s) {
     return new Promise(function(_, reject) {
@@ -749,7 +755,7 @@ const timeout = function(s) {
 const controlRecipes = async function() {
     //Paso 4 avance 2 de proyecto
     const id = window.location.hash.slice(1); // 4.a: Declarar 'id' y asignarle el hash completo 'avance 2 de proyecto'
-    console.log('ID recibido:', id); // 4.b: Imprimir en la consola (para depuración) 'avance 2 de proyecto'
+    //console.log('ID recibido:', id); // 4.b: Imprimir en la consola (para depuración) 'avance 2 de proyecto'
     if (!id) return;
     // LLAMADA DEL SPINNER:
     (0, _recipeViewJsDefault.default).renderSpinner(); // Se llama justo antes de la operación asíncrona
@@ -872,29 +878,76 @@ const controlRecipes = async function() {
     //////////////////////////////////////////////////////////////
     } catch (error) {
         // d. En caso de error, enviar una alerta
-        alert(`Ocurri\xf3 un error: ${error.message}`);
+        //alert(`Ocurrió un error: ${error.message}`);
         // También puedes loguear el error completo para depuración
-        console.error(error);
+        //console.error(error);
+        // 2.b: Llama a renderError para mostrar el error en la interfaz
+        (0, _recipeViewJsDefault.default).renderError(); // Usamos error.message para un mensaje más detallado
+        // Mantenemos el logging del error específico para depuración
+        //console.error(`${error} 💥💥💥💥`);
+        // Borra el console.log que se utilizaba (si lo tenías aquí)
+        throw error;
     }
 };
+///////////////////////////////////////////
+// 3.a: Crea la función asíncrona controlSearchResults
+const controlSearchResults = async function() {
+    // Definimos una query de prueba temporal, ya que aún no tenemos la vista de búsqueda
+    //const query = 'pizza';
+    // 3.a.i: Dentro del try
+    try {
+        // 4.c.ii: Instancia la función searchView.getQuery y asígnala a la constante query
+        const query = (0, _searchViewJsDefault.default).getQuery();
+        // 4.c.iii: Valida que, si no existe ninguna consulta, regrese inmediatamente
+        if (!query) return;
+        // 5.g.ii: Llama al método resultsView.renderSpinner()
+        (0, _resultsViewJsDefault.default).renderSpinner();
+        // 3.a.i.1: Invoca a la función model.loadSearchResults con el parámetro query
+        await _modelJs.loadSearchResults(query);
+        // 5.h.v: Invoca el método resultView.render con los resultados
+        (0, _resultsViewJsDefault.default).render(_modelJs.state.search.results);
+    // 3.a.i.2: Imprime en la consola el resultado
+    //console.log('Resultados desde el controlador:', model.state.search.results);
+    } catch (error) {
+        // 3.a.ii: Dentro del catch imprime en la consola el error
+        console.error(error);
+    // Opcional: mostrar error en la UI si la búsqueda falla
+    // recipeView.renderError(error.message); 
+    }
+};
+//////////////////////////////////////////////////////////
 // e. Invocar a la función showRecipe
 //controlRecipes(); //El listener de load ya maneja la carga inicial de la página. El llamado directo a controlRecipes() es innecesario.
-[
-    'hashchange',
-    'load'
-].forEach((ev)=>window.addEventListener(ev, controlRecipes)); // https://forkify-api.herokuapp.com/v2
+//['hashchange','load'].forEach(ev => window.addEventListener(ev, controlRecipes)); avance 3 paso 1.a cortar y pegar en RecipeReview
+// controller.js (Al final del archivo, después de controlRecipes)
+const init = function() {
+    // 1.d.i: Instancia el método addHandlerRender y pásale controlRecipes como handler
+    (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
+    // 3.a.iii: Prueba la funcionalidad invocando a la función controlSearchResults (eliminar después)
+    //controlSearchResults();
+    // 4.d.iii: Agrega el método searchView.addHandlerSearch con el parámetro controlSearchResults
+    (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchResults);
+};
+// 1.d.ii: Invoca a la función init
+init(); // https://forkify-api.herokuapp.com/v2
  ///////////////////////////////////////
 
-},{"./model.js":"3QBkH","../js/views/RecipeView.js":"dfIpa","@parcel/transformer-js/src/esmodule-helpers.js":"idvtB"}],"3QBkH":[function(require,module,exports,__globalThis) {
+},{"./model.js":"3QBkH","../js/views/RecipeView.js":"dfIpa","@parcel/transformer-js/src/esmodule-helpers.js":"idvtB","../js/views/searchView.js":"kbE4Z","../js/views/ResultsView.js":"CYzq3"}],"3QBkH":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state);
 parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
+///////////////////////////avance 3 //////////////////////////
+// 1.a: Declara y exporta una función asíncrona llamada loadSearchResults
+parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults);
 var _helpersJs = require("../js/helpers.js"); // Importa getJSON
 var _configJs = require("./config.js"); // Importa la constante desde config.js
 const state = {
     recipe: {},
-    search: {},
+    search: {
+        query: '',
+        results: []
+    },
     bookmarks: []
 };
 async function loadRecipe(id) {
@@ -945,8 +998,38 @@ async function loadRecipe(id) {
         // y lo muestre al usuario usando la vista (recipeView), manteniendo
         // al modelo libre de responsabilidades de la UI (alert).
         // 4.a.ix: Optimiza el manejo de errores: envía un mensaje de error personalizado a la consola
-        console.error(`${error} Request took too long! \u{1F4A5}\u{1F4A5}\u{1F4A5}\u{1F4A5}`);
+        //console.error(`${error} Request took too long! 💥💥💥💥`); 
         // Lanza el error para que el controlador lo capture
+        // 2.c: Propagar el error, avance 3
+        // Esto permite que controlRecipes lo capture,avance 3
+        throw error;
+    }
+}
+async function loadSearchResults(query) {
+    // 1.b: En el cuerpo de la función crea un bloque try y catch
+    try {
+        const url = `${(0, _configJs.API_URL)}?search=${query}`; // ¡Cuidado, la API necesita el '?' después de API_URL
+        // 1.c: Declara una constante data e indícale que espere a la promesa getJSON
+        const data = await (0, _helpersJs.getJSON)(url);
+        // 2.b.i: Asigna la variable query a state.search.query
+        state.search.query = query;
+        // 1.d & 2.b.ii: Mapear los resultados y asignarlos a state.search.results
+        state.search.results = data.data.recipes.map((rec)=>{
+            return {
+                id: rec.id,
+                title: rec.title,
+                publisher: rec.publisher,
+                image: rec.image_url
+            };
+        });
+    // 2.b.iii: Envía a la consola los resultados
+    //console.log('Resultados de búsqueda (state.search.results):', state.search.results);
+    // 1.g: Prueba (eliminar después)
+    //loadSearchResults('pizza'); 
+    } catch (error) {
+        // 1.e: Imprime en la consola la cadena de error
+        console.log(`${error} \u{1F4A5}\u{1F4A5}\u{1F4A5}\u{1F4A5}`);
+        // 1.f: Lanza el error nuevamente para que pueda ser utilizado por el controlador
         throw error;
     }
 }
@@ -997,7 +1080,7 @@ const TIMEOUT_SEC = 5;
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getJSON", ()=>getJSON);
-var _configJs = require("./config.js"); // Importa la constante del tiempo límite
+var _configJs = require("./config.js"); // Importando la constante del tiempo límite
 const timeout = function(s) {
     return new Promise(function(_, reject) {
         setTimeout(function() {
@@ -1023,51 +1106,58 @@ const getJSON = async function(url) {
         if (!resp.ok) throw new Error(`${data.message} (${resp.status})`);
         // 4.a.vi: Retorna el valor de data
         return data;
-    } catch (err) {
+    } catch (error) {
         // 4.a.vii: Recibe el parámetro error y lanza el error
-        throw err;
+        throw error;
     }
 };
 
 },{"./config.js":"2hPh4","@parcel/transformer-js/src/esmodule-helpers.js":"idvtB"}],"dfIpa":[function(require,module,exports,__globalThis) {
+//const icons = new URL('../../img/icons.svg', import.meta.url).href; // Parcel v2
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "RecipeView", ()=>RecipeView);
+var _viewJs = require("./View.js"); // 5.b.i: Importa la clase View
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
 var _fractionJs = require("fraction.js");
 var _fractionJsDefault = parcelHelpers.interopDefault(_fractionJs);
 const icons = new URL(require("a0b82650a605f976")).href; // Parcel v2
-class RecipeView {
-    #parentElement = document.querySelector('.recipe');
-    #data;
+class RecipeView extends (0, _viewJsDefault.default) {
+    // 2.a.ii: Crea la propiedad privada de mensaje de error por defecto, avance 3
+    _message = 'Recipe was successfully uploaded! :)';
+    _errorMessage = 'We could not find that recipe. Please try another one!';
+    _parentElement = document.querySelector('.recipe');
+    //#data;
     //Renderiza la receta en el DOM
-    render(data) {
-        this.#data = data; // Guarda los datos recibidos
-        this.#clear(); // Limpia el contenido anterior
-        const markup = this.#generateMarkup(); // Genera el nuevo HTML
-        this.#parentElement.insertAdjacentHTML('afterbegin', markup); // Inserta en el DOM
-    }
+    // render(data) {
+    //     this.#data = data; // Guarda los datos recibidos
+    //     this.#clear(); // Limpia el contenido anterior
+    //     const markup = this.#generateMarkup(); // Genera el nuevo HTML
+    //     this.#parentElement.insertAdjacentHTML('afterbegin', markup); // Inserta en el DOM
+    // }
     //Limpia el contenido del contenedor principal
-    #clear() {
-        this.#parentElement.innerHTML = '';
-    }
-    #generateMarkup() {
+    // #clear() {
+    //     this.#parentElement.innerHTML = '';
+    // }
+    _generateMarkup() {
         return `
         <figure class="recipe__fig">
-        <img src="${this.#data.image}" alt="${this.#data.title}" class="recipe__img" />
+        <img src="${this._data.image}" alt="${this._data.title}" class="recipe__img" />
         <h1 class="recipe__title">
-        <span>${this.#data.title}</span>
+        <span>${this._data.title}</span>
         </h1>
         </figure>
         <div class="recipe__details">
         <div class="recipe__info">  
         <svg class="recipe__info-icon">
         <use href="${icons}#icon-clock"></use> </svg>
-        <span class="recipe__info-data recipe__info-data--minutes">${this.#data.cookTime}</span>
+        <span class="recipe__info-data recipe__info-data--minutes">${this._data.cookTime}</span>
         <span class="recipe__info-text">minutes</span>
         </div>
         <div class="recipe__info">
         <svg class="recipe__info-icon">
         <use href="${icons}#icon-users"></use> </svg>
-        <span class="recipe__info-data recipe__info-data--people">${this.#data.servings}</span>
+        <span class="recipe__info-data recipe__info-data--people">${this._data.servings}</span>
         <span class="recipe__info-text">servings</span>
         <div class="recipe__info-buttons">
         <button class="btn--tiny btn--update-servings" data-update-to="3">
@@ -1092,7 +1182,7 @@ class RecipeView {
         <div class="recipe__ingredients">
           <h2 class="heading--2">Recipe ingredients</h2>
           <ul class="recipe__ingredient-list">
-            ${this.#data.ingredients.map((ing)=>{
+            ${this._data.ingredients.map((ing)=>{
             return `
             <li class="recipe__ingredient">
               <svg class="recipe__icon">
@@ -1112,12 +1202,12 @@ class RecipeView {
         <h2 class="heading--2">How to cook it</h2>
         <p class="recipe__directions-text">
         This recipe was carefully designed and tested by
-        <span class="recipe__publisher">${this.#data.publisher}</span>. Please check out
+        <span class="recipe__publisher">${this._data.publisher}</span>. Please check out
         directions at their website.
         </p>
         <a
         class="btn--small recipe__btn"
-        href="${this.#data.sourceUrl}"
+        href="${this._data.sourceUrl}"
         target="_blank"
         >
         <span>Directions</span>
@@ -1127,27 +1217,68 @@ class RecipeView {
         </div>
         `;
     }
-    renderSpinner() {
-        // c. Borra el contenido existente del elemento padre
-        this.#parentElement.innerHTML = '';
-        // a. Crea la variable markup con el spinner
-        const markup = `
-    <div class="spinner">
-      <svg>
-        <use href="${icons}#icon-loader"></use>
-      </svg>
-    </div>
-  `;
-        // b. Inserta el markup del spinner en el elemento padre
-        this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+    //     renderSpinner() {
+    //         // c. Borra el contenido existente del elemento padre
+    //         this.#parentElement.innerHTML = '';
+    //         // a. Crea la variable markup con el spinner
+    //         const markup = `
+    //     <div class="spinner">
+    //       <svg>
+    //         <use href="${icons}#icon-loader"></use>
+    //       </svg>
+    //     </div>
+    //   `;
+    //         // b. Inserta el markup del spinner en el elemento padre
+    //         this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+    //     };
+    //////////////////////////////////////////////////////////////////Avance 3
+    // 2.a.i: Crea el método renderError
+    // renderError(message = this.#errorMessage) {
+    //     // 2.a.iii - 2.a.vi: Declarar la constante markup con el código de error
+    //     const markup = `
+    //         <div class="error">
+    //             <div>
+    //                 <svg>
+    //                     <use href="${icons}#icon-alert-triangle"></use>
+    //                 </svg>
+    //             </div>
+    //             <p>${message}</p>
+    //         </div>
+    //     `;
+    //     // 2.a.vii: Limpiar e insertar el HTML
+    //     this.#clear();
+    //     this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+    // }
+    // 3.a: Copia renderError y renómbralo como renderMessage
+    // 3.b: Pásale como parámetro message=this.#message
+    // renderMessage(message = this.#message) {
+    //     // 3.c: Cambia el icono de icon-alert-triangle a icon-smile
+    //     const markup = `
+    //         <div class="message">
+    //             <div>
+    //                 <svg>
+    //                     <use href="${icons}#icon-smile"></use>
+    //                 </svg>
+    //             </div>
+    //             <p>${message}</p>
+    //         </div>
+    //     `;
+    //     this.#clear();
+    //     this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+    // }
+    // 1.b, 1.c: Se Crea el método addHandlerRender para suscribir al controlador (handler)
+    addHandlerRender(handler) {
+        // Pega el código cortado aquí, reemplazando 'controlRecipes' por 'handler'
+        [
+            'hashchange',
+            'load'
+        ].forEach((ev)=>window.addEventListener(ev, handler));
+    //['hashchange','load'].forEach(ev => window.addEventListener(ev, controlRecipes));
     }
 }
 exports.default = new RecipeView();
 
-},{"a0b82650a605f976":"9OuHA","@parcel/transformer-js/src/esmodule-helpers.js":"idvtB","fraction.js":"md6n5"}],"9OuHA":[function(require,module,exports,__globalThis) {
-module.exports = module.bundle.resolve("icons.7bd9dd61.svg") + "?" + Date.now();
-
-},{}],"md6n5":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"idvtB","fraction.js":"md6n5","./View.js":"jSw21","a0b82650a605f976":"9OuHA"}],"md6n5":[function(require,module,exports,__globalThis) {
 /*
 Fraction.js v5.3.4 8/22/2025
 https://raw.org/article/rational-numbers-in-javascript/
@@ -1535,6 +1666,156 @@ Licensed under the MIT license.
     }), v["default"] = v, v.Fraction = v, module.exports = v);
 })(this);
 
-},{}]},["2rtMv","7dWZ8"], "7dWZ8", "parcelRequire3a11", {}, "./", "/")
+},{}],"jSw21":[function(require,module,exports,__globalThis) {
+// Importa los iconos aquí (dado que todas las vistas los necesitan)
+// Asume que la ruta es correcta con respecto al archivo View.js
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+const icons = new URL(require("fcd5427331ff87b4")).href;
+class View {
+    // 5.c: Propiedad data
+    _data;
+    // 5.c: Copia render, _clear, renderSpinner, renderError, renderMessage de RecipeView
+    /**
+     * Renderiza los datos recibidos en el DOM.
+     * @param {Object | Object[]} data El objeto o array de datos a renderizar (ej. receta o resultados de búsqueda).
+     * @param {boolean} [render=true] Si es false, retorna el markup string en lugar de renderizarlo al DOM.
+     * @returns {string | undefined} Retorna el markup si render=false, sino undefined.
+     */ render(data, render = true) {
+        // 5.i.iii: Validación de datos antes de renderizar (Manejo de No Resultados)
+        if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
+        this._data = data;
+        const markup = this._generateMarkup();
+        if (!render) return markup;
+        this._clear();
+        this._parentElement.insertAdjacentHTML('afterbegin', markup);
+    }
+    _clear() {
+        this._parentElement.innerHTML = '';
+    }
+    renderSpinner() {
+        this._clear();
+        const markup = `
+            <div class="spinner">
+                <svg>
+                    <use href="${icons}#icon-loader"></use>
+                </svg>
+            </div>
+        `;
+        this._parentElement.insertAdjacentHTML('afterbegin', markup);
+    }
+    // El valor por defecto se debe definir en la clase hija
+    renderError(message = this._errorMessage) {
+        this._clear();
+        const markup = `
+            <div class="error">
+                <div>
+                    <svg>
+                        <use href="${icons}#icon-alert-triangle"></use>
+                    </svg>
+                </div>
+                <p>${message}</p>
+            </div>
+        `;
+        this._parentElement.insertAdjacentHTML('afterbegin', markup);
+    }
+    // El valor por defecto se debe definir en la clase hija
+    renderMessage(message = this._message) {
+        this._clear();
+        const markup = `
+            <div class="message">
+                <div>
+                    <svg>
+                        <use href="${icons}#icon-smile"></use>
+                    </svg>
+                </div>
+                <p>${message}</p>
+            </div>
+        `;
+        this._parentElement.insertAdjacentHTML('afterbegin', markup);
+    }
+}
+exports.default = View;
+
+},{"fcd5427331ff87b4":"9OuHA","@parcel/transformer-js/src/esmodule-helpers.js":"idvtB"}],"9OuHA":[function(require,module,exports,__globalThis) {
+module.exports = module.bundle.resolve("icons.7bd9dd61.svg") + "?" + Date.now();
+
+},{}],"kbE4Z":[function(require,module,exports,__globalThis) {
+// searchView.js
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class SearchView {
+    // 4.b.i: Crea el elemento padre privado (#parentElement)
+    _parentElement = document.querySelector('.search');
+    // 4.b.ii & 4.e.iii, 4.e.iv: Método para obtener la búsqueda y limpiar el campo
+    getQuery() {
+        // 4.e.iii: Crea la constante query y asigna el valor del input
+        const query = this._parentElement.querySelector('.search__field').value;
+        // 4.e.ii: Llama al método privado clearInput para borrar el texto
+        this._clearInput();
+        // 4.e.iv: Retorna la constante query
+        return query;
+    }
+    // 4.e.i: Crea el método privado clearInput para borrar el campo
+    _clearInput() {
+        this._parentElement.querySelector('.search__field').value = '';
+    }
+    // 4.d.i: Crea el método addHandlerSearch (Patrón Editor-Suscriptor)
+    addHandlerSearch(handler) {
+        // 4.d.ii.1.a & 4.d.ii.1.b: Escucha el evento 'submit' en el formulario
+        this._parentElement.addEventListener('submit', function(e) {
+            // 4.d.ii.1.b.i: Previene la recarga de la página
+            e.preventDefault();
+            // 4.d.ii.1.b.ii: Llama a la función controladora
+            handler();
+        });
+    }
+}
+exports.default = new SearchView();
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"idvtB"}],"CYzq3":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _viewJs = require("./View.js"); // 5.f.i: Importa la clase View
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+const icons = new URL(require("b799160e8a92a7be")).href;
+// Importa los iconos aquí (o usa la variable icons si la exportaste desde View)
+// Asumiré que View.js contiene la lógica de iconos y renderizado.
+class ResultsView extends (0, _viewJsDefault.default) {
+    // 5.f.iii: Declara el elemento padre
+    _parentElement = document.querySelector('.results');
+    // 5.i.i: Crea la propiedad error Message
+    _errorMessage = 'No recipes found for your query. Please try another one!';
+    // 5.i.ii: Crea la propiedad message
+    _message = '';
+    // 5.h.i: Crea el método privado _generateMarkup
+    _generateMarkup() {
+        // 5.h.i: Regresa el arreglo this._data convertido en cadena
+        return this._data.map(this._generateMarkupPreview).join('');
+    }
+    // 5.h.ii: Crea el método _generateMarkupPreview
+    _generateMarkupPreview(result) {
+        // Obtenemos el id de la receta activa (si la hay) para marcar el link activo
+        const id = window.location.hash.slice(1);
+        return `
+            <li class="preview">
+                <a class="preview__link ${result.id === id ? 'preview__link--active' : '' // Marca el link activo
+        }" href="#${result.id}"> <figure class="preview__fig">
+                        <img src="${result.image}" alt="${result.title}" /> </figure>
+                    <div class="preview__data">
+                        <h4 class="preview__title">${result.title}</h4> <p class="preview__publisher">${result.publisher}</p> <div class="preview__user-generated ${result.key ? '' : 'hidden'}"> 
+                             <svg>
+                                <use href="${icons}#icon-user"></use>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        `;
+    }
+}
+exports.default = new ResultsView(); // 5.f.iv: Exporta la instancia
+
+},{"./View.js":"jSw21","@parcel/transformer-js/src/esmodule-helpers.js":"idvtB","b799160e8a92a7be":"9OuHA"}]},["2rtMv","7dWZ8"], "7dWZ8", "parcelRequire3a11", {}, "./", "/")
 
 //# sourceMappingURL=forkify.4a59a05f.js.map

@@ -1,4 +1,4 @@
-import { TIMEOUT_SEC } from './config.js'; // Importa la constante del tiempo límite
+import { TIMEOUT_SEC } from './config.js'; // Importando la constante del tiempo límite
 
 const timeout = function (s) {
   return new Promise(function (_, reject) {
@@ -27,8 +27,8 @@ export const getJSON = async function (url) {
 
     // 4.a.vi: Retorna el valor de data
     return data;
-  } catch (err) {
+  } catch (error) {
     // 4.a.vii: Recibe el parámetro error y lanza el error
-    throw err; 
+    throw error; 
   }
 };
